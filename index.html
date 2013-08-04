@@ -60,22 +60,36 @@
 		.append-area{
 			background-color: #F8F8F8;
 			border-radius: 5px;
-			height: 7em;
+			height: 400px;
 			padding: .5em !important;
 			width: 86%;
 			margin: auto !important;
 			border: 3px solid #999;
 			box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
 			font-family: monospace !important;
+			white-space: pre;
+			font-size: .5em !important;
+			line-height: 1em !important;
+			text-align: left;
+			overflow: scroll;
 		}
 		.append-area .selector{
-			margin:2em;
-			color:#888;
-			display: block
+			margin: 2em 0;
+			color: #888;
+			display: block;
+			width: 100%;
+			text-align: center;
+			font-size: 2em;
 		}
 		#link-map{
 			height:600px;
 			background-color:#f08;
+		}
+		.reveal .append-area img{
+			max-width: none;
+			max-height: none;
+			border:none;
+			margin:0;
 		}
 		</style>
 	</head>
@@ -148,7 +162,7 @@ yeah, totally!
 					</section>
 
 					<section>
-						<h2>#ogn32 Atendees</h2>
+						<h2>#ogn32 Attendees</h2>
 						<pre><code data-trim>
 var page = require('webpage').create(),
 url = 'https://m.lanyrd.com/2013/ogn32/attendees/';
@@ -180,7 +194,7 @@ server.listen(8080, function(request, response) {
   var page = new WebPage();
   page.open('https://m.lanyrd.com/2013/ogn32/attendees/', function (status) {
     // … fetch attendees as before
-    response.setHeader('Content-Type', 'application/json; charset=utf-8');
+    response.setHeader('Content-Type', 'text/plain; charset=utf-8');
     response.statusCode = 200;
     attendees.forEach(function(attendee){
       response.write("* " + attendee + "\n\n");
@@ -204,6 +218,13 @@ server.listen(8080, function(request, response) {
 					<section class="titles">
 						<h1><span class="fade">serving websites</span><br/>to websites</h1>
 						<h2 class="fade">with PhantomJS</h2>
+					</section>
+
+					<section>
+						<pre><code data-trim>
+response.setHeader("Access-Control-Allow-Origin","*");
+						</code></pre>
+						<p><a href="http://enable-cors.org/">http://enable-cors.org</a></p>
 					</section>
 
 					<section>
@@ -236,21 +257,17 @@ $.get('http://localhost:8080/').then(function(response){
 						<h2>Links by link area</h2>
 						<pre><code data-trim>
 var links = page.evaluate(function () {
-  var sizes = [].reduce.call(document.querySelectorAll('a'), function(memo, a){
+  return [].reduce.call(document.querySelectorAll('a'), function(memo, a){
     var bb = a.getBoundingClientRect(),
       area = bb.width * bb.height,
-      href = a.getAttribute('href');
+      href = a.href
 
     if(area)
       memo[href] = (memo[href] || 0) + area;
    
     return memo;
   },{});
-
-  return Object.keys(sizes).map(function(url){
-    return [url, sizes[url]];
-  });
-})
+});
 						</code></pre>
 					</section>
 
@@ -273,7 +290,7 @@ $.getJSON('http://…').then(function(data){
 
 					<section>
 						<div id="link-map"></div>
-						<div><span class="fragment">1<span><span class="fragment">2<span><span class="fragment">3<span></div>
+						<div><span class="fragment" data-graph-fragment="graph-1">1<span><span class="fragment">2<span><span class="fragment">3<span></div>
 					</section>
 				</section>
 
@@ -609,6 +626,24 @@ function linkify( selector ) {
 				]
 			});
 
+		</script>
+
+
+		<script type="text/javascript" src="js/jquery.min.js"></script>
+		<script type="text/javascript">
+Reveal.addEventListener( 'fragmentshown', function( event ) {
+	console.log(event.fragment);
+    // event.fragment = the fragment DOM element
+} );
+Reveal.addEventListener( 'fragmenthidden', function( event ) {
+    // event.fragment = the fragment DOM element
+} );
+
+
+		Reveal.addEventListener( 'graph-1', function() {
+			console.log("OKKKK")
+    // TODO: Sprinkle magic
+}, false );
 		</script>
 
 	</body>

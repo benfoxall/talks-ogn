@@ -11,9 +11,10 @@ server.listen(8080, function(request, response) {
       });
     });
     response.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    response.setHeader('Access-Control-Allow-Origin','*');
     response.statusCode = 200;
     attendees.forEach(function(attendee){
-      response.write("* " + attendee + "\n\n");
+      response.write("* " + attendee + "\n");
     })
     response.close();
     page.close();
