@@ -1,5 +1,5 @@
-@import url(https://fonts.googleapis.com/css?family=News+Cycle:400,700);
-@import url(https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic);
+/*@import url(https://fonts.googleapis.com/css?family=News+Cycle:400,700);*/
+/*@import url(https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic);*/
 /**
  * A simple theme for reveal.js presentations, similar
  * to the default theme. The accent color is darkblue.
@@ -83,7 +83,7 @@ body {
 
 .reveal a:hover img {
   background: rgba(255, 255, 255, 0.2);
-  border-color: darkblue;
+  border-color: #aaa;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.55); }
 
 /*********************************************
@@ -91,19 +91,19 @@ body {
  *********************************************/
 .reveal .controls div.navigate-left,
 .reveal .controls div.navigate-left.enabled {
-  border-right-color: darkblue; }
+  border-right-color: #aaa; }
 
 .reveal .controls div.navigate-right,
 .reveal .controls div.navigate-right.enabled {
-  border-left-color: darkblue; }
+  border-left-color: #aaa; }
 
 .reveal .controls div.navigate-up,
 .reveal .controls div.navigate-up.enabled {
-  border-bottom-color: darkblue; }
+  border-bottom-color: #aaa; }
 
 .reveal .controls div.navigate-down,
 .reveal .controls div.navigate-down.enabled {
-  border-top-color: darkblue; }
+  border-top-color: #aaa; }
 
 .reveal .controls div.navigate-left.enabled:hover {
   border-right-color: #0000f1; }

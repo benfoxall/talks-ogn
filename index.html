@@ -15,7 +15,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 		<link rel="stylesheet" href="css/reveal.min.css">
-		<link rel="stylesheet" href="css/theme/default.css" id="theme">
+		<link rel="stylesheet" href="css/theme/simple.css" id="theme">
 
 		<!-- For syntax highlighting -->
 		<link rel="stylesheet" href="lib/css/zenburn.css">
@@ -28,6 +28,56 @@
 		<!--[if lt IE 9]>
 		<script src="lib/js/html5shiv.js"></script>
 		<![endif]-->
+
+		<style type="text/css">
+		.titles{
+			text-align:right
+		}
+		.titles .fade{
+			opacity: 0.2
+		}
+		a.whiteoctober{
+			background-image:url(img/white-october.png);
+			width:250px;
+			height:90px;
+			display:block;
+			margin-top:2em;
+			margin:auto;
+		}
+		a.phantomjs{
+			/*background-image:url(img/phantomjs.png);*/
+			background: #43413e url(img/phantomjs.png) no-repeat center center;
+			width:70%;
+			height:125px;
+			display:block;
+			margin:auto;
+
+		}
+		a.whiteoctober span, a.phantomjs span{display:none;}
+		.reveal section img.borderless{border:none;box-shadow:none;}
+		.reveal pre code{padding:1em;}
+
+		.append-area{
+			background-color: #F8F8F8;
+			border-radius: 5px;
+			height: 7em;
+			padding: .5em !important;
+			width: 86%;
+			margin: auto !important;
+			border: 3px solid #999;
+			box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+			font-family: monospace !important;
+		}
+		.append-area .selector{
+			margin:2em;
+			color:#888;
+			display: block
+		}
+		#link-map{
+			height:600px;
+			background-color:#f08;
+		}
+		</style>
 	</head>
 
 	<body>
@@ -37,6 +87,206 @@
 			<!-- Any section element inside of this container is displayed as a slide -->
 			<div class="slides">
 
+				<section id="hello" class="titles">
+					<h1>serving websites<br/>to websites</h1>
+					<h2>with PhantomJS</h2>
+				</section>
+
+				<section>
+					<h1>Ben Foxall</h1>
+					<h2>@benjaminbenben</h2>
+					<p>
+						<a href="http://whiteoctober.co.uk" class="whiteoctober"><span>White October</span></a>
+					</p>
+				</section>
+
+				<section>
+					<section id="phantomjs">
+						<a href="http://phantomjs.org" class="image">
+							<img src="img/phantomjs.png" class="borderless">
+						</a>
+					</section>
+
+					<section>
+						<!-- <h2>headless browsing</h2> -->
+
+						<p>Does a webpage have a <a style="background-color:hotpink;color:#000" href="http://benjaminbenben.com/hot-pink.html">hotpink</a> background?</p>
+
+						<pre class="fragment"><code data-trim contenteditable>
+1. visit the webpage
+2. inspect the body element
+3. check it's awesome
+						</code></pre>
+
+						<p class="fragment">How about checking 1000 pages?</p>
+
+						<pre class="fragment"><code data-trim contenteditable>
+phantomjs hot_pink.js http://benjaminbenben.com/hot-pink.html
+
+yeah, totally!
+						</code></pre>
+					</section>
+
+					<section>
+						<p>example: mediaqueri.es</p>
+						<p><a href="http://mediaqueri.es" class="image">
+							<img src="img/mediaqueri.es.png" class="borderless">
+						</a></p>
+					</section>
+				</section>
+
+
+				<section>
+					<section id="webserver">
+						<p><a href="https://github.com/ariya/phantomjs/wiki/API-Reference-WebServer" class="image">
+							<img src="img/webServerModule.png" class="borderless" alt="webServer Module">
+						</a></p>
+					</section>
+
+					<section>
+						<p><img src="img/flow.png" class="borderless"></p>
+					</section>
+
+					<section>
+						<h2>#ogn32 Atendees</h2>
+						<pre><code data-trim>
+var page = require('webpage').create(),
+url = 'https://m.lanyrd.com/2013/ogn32/attendees/';
+page.open(url, function (status) {
+  var attendees = page.evaluate(function(){
+    return $('a[href^="/profile"] .title').map(function(){
+      var name = $(this).text().trim(),
+        bio  = $(this).next().text().trim();
+
+      return name + ' - ' + bio;
+    });
+  });
+  attendees.forEach(function(attendee){
+    console.log("* " + attendee)
+  });
+  phantom.exit();
+});
+						</code></pre>
+					</section>
+
+					<section>
+						<p><img src="img/output.png" class="borderless"></p>
+					</section>
+
+					<section>
+						<pre><code data-trim>
+var server = require('webserver').create();
+server.listen(8080, function(request, response) {
+  var page = new WebPage();
+  page.open('https://m.lanyrd.com/2013/ogn32/attendees/', function (status) {
+    // … fetch attendees as before
+    response.setHeader('Content-Type', 'application/json; charset=utf-8');
+    response.statusCode = 200;
+    attendees.forEach(function(attendee){
+      response.write("* " + attendee + "\n\n");
+    })
+    response.close();
+    page.close();
+  });
+});
+</code></pre>
+					</section>
+
+
+					<section>
+						<p><img src="img/output-html.png" class="borderless"></p>
+					</section>
+
+				</section>
+
+
+				<section>
+					<section class="titles">
+						<h1><span class="fade">serving websites</span><br/>to websites</h1>
+						<h2 class="fade">with PhantomJS</h2>
+					</section>
+
+					<section>
+						<pre><code data-trim>
+$.get('http://localhost:8080/').then(function(response){
+	$('#ogn-attendees').text(response);
+});
+</code></pre>
+
+						<div id="ogn-attendees" class="append-area"><span class="selector">#ogn-attendees</span></div>
+					</section>
+
+					
+					<section>
+						<pre><code data-trim>
+$.get('http://localhost:8080/').then(function(response){
+	$('#ogn-image').append($('&lt;img&gt;',{src:response}));
+});
+</code></pre>
+
+						<div id="ogn-image" class="append-area"><span class="selector">#ogn-image</span></div>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h1>Analysing content</h1>
+					</section>
+					<section>
+						<h2>Links by link area</h2>
+						<pre><code data-trim>
+var links = page.evaluate(function () {
+  var sizes = [].reduce.call(document.querySelectorAll('a'), function(memo, a){
+    var bb = a.getBoundingClientRect(),
+      area = bb.width * bb.height,
+      href = a.getAttribute('href');
+
+    if(area)
+      memo[href] = (memo[href] || 0) + area;
+   
+    return memo;
+  },{});
+
+  return Object.keys(sizes).map(function(url){
+    return [url, sizes[url]];
+  });
+})
+						</code></pre>
+					</section>
+
+					<section>
+						<pre><code data-trim>
+response.setHeader("Content-Type", "application/json");
+response.statusCode = 200;
+response.write(JSON.stringify(links));
+response.close();
+						</code></pre>
+					</section>
+
+					<section>
+						<pre><code data-trim>
+$.getJSON('http://…').then(function(data){
+  console.log("links - ", data.links);
+})
+						</code></pre>
+					</section>
+
+					<section>
+						<div id="link-map"></div>
+						<div><span class="fragment">1<span><span class="fragment">2<span><span class="fragment">3<span></div>
+					</section>
+				</section>
+
+				<section>
+					<h1>Ben Foxall</h1>
+					<h2>@benjaminbenben</h2>
+					<p>
+						<a href="http://whiteoctober.co.uk" class="whiteoctober"><span>White October</span></a>
+					</p>
+				</section>
+
+
+<!--
 				<section>
 					<h1>Reveal.js</h1>
 					<h3>HTML Presentations Made Easy</h3>
@@ -57,7 +307,6 @@
 					</aside>
 				</section>
 
-				<!-- Example of nested vertical slides -->
 				<section>
 					<section>
 						<h2>Vertical Slides</h2>
@@ -326,7 +575,7 @@ function linkify( selector ) {
 					<h1>THE END</h1>
 					<h3>BY Hakim El Hattab / hakim.se</h3>
 				</section>
-
+-->
 			</div>
 
 		</div>
