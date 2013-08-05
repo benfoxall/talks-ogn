@@ -241,23 +241,25 @@ response.setHeader("Access-Control-Allow-Origin","*");
 
 					<section>
 						<pre><code data-trim>
-$.get('http://localhost:8080/').then(function(response){
+$.get('http://ogn32-attendees.herokuapp.com/').then(function(response){
 	$('#ogn-attendees').text(response);
 });
 </code></pre>
 
 						<div id="ogn-attendees" class="append-area"><span class="selector">#ogn-attendees</span></div>
+						<div class="fragment" data-fragment-action="ogn-attendees"></div>
 					</section>
 
 					
 					<section>
 						<pre><code data-trim>
-$.get('http://localhost:8080/').then(function(response){
-	$('#ogn-image').append($('&lt;img&gt;',{src:response}));
+$.get('http://ogn32-sitepic.herokuapp.com/').then(function(response){
+	$('#ogn-image').append($('<img>',{src:response}));
 });
 </code></pre>
 
 						<div id="ogn-image" class="append-area"><span class="selector">#ogn-image</span></div>
+						<div class="fragment" data-fragment-action="ogn-image"></div>
 					</section>
 				</section>
 
@@ -646,17 +648,45 @@ function linkify( selector ) {
 		<script type="text/javascript">
 Reveal.addEventListener( 'fragmentshown', function( event ) {
 	console.log(event.fragment);
-    // event.fragment = the fragment DOM element
+    var action = $(event.fragment).data('fragment-action');
+    if(action){
+    	fragmentActions[action] && fragmentActions[action]();
+    }
 } );
 Reveal.addEventListener( 'fragmenthidden', function( event ) {
-    // event.fragment = the fragment DOM element
+    var action = $(event.fragment).data('fragment-action');
+    if(action){
+    	fragmentReverts[action] && fragmentReverts[action]();
+    }
 } );
 
 
-		Reveal.addEventListener( 'graph-1', function() {
-			console.log("OKKKK")
-    // TODO: Sprinkle magic
-}, false );
+var fragmentActions = {
+	"ogn-attendees": function(){
+		$.get('http://ogn32-attendees.herokuapp.com/').then(function(response){
+			$('#ogn-attendees').text(response);
+		});
+	},
+	"ogn-image": function(){
+		$.get('http://ogn32-sitepic.herokuapp.com/').then(function(response){
+			$('#ogn-image').html($('<img>',{src:response}));
+		});
+	}
+}
+
+var fragmentReverts = {
+	"ogn-attendees": function(){
+		$('#ogn-attendees').html('<span class="selector">#ogn-attendees</span>');
+	},
+	"ogn-image": function(){
+		$('#ogn-image').html('<span class="selector">#ogn-image</span>');
+	}
+}
+
+
+
+
+
 
 
 			// $(function(){
