@@ -1,7 +1,7 @@
 var server = require('webserver').create();
 server.listen(8080, function(request, response) {
   var page = new WebPage();
-  page.open('https://m.lanyrd.com/2013/ogn32/attendees/', function (status) {
+  page.open('http://benjaminbenben.com', function (status) {
 
     var links = page.evaluate(function () {
       return [].reduce.call(document.querySelectorAll('a'), function(memo, a){
