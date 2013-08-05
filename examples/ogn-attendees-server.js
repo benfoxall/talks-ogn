@@ -1,5 +1,7 @@
+var PORT = require('system').env.PORT || 8080;
+
 var server = require('webserver').create();
-server.listen(8080, function(request, response) {
+server.listen(PORT, function(request, response) {
   var page = new WebPage();
   page.open('https://m.lanyrd.com/2013/ogn32/attendees/', function (status) {
     var attendees = page.evaluate(function(){
@@ -15,7 +17,7 @@ server.listen(8080, function(request, response) {
     response.statusCode = 200;
     attendees.forEach(function(attendee){
       response.write("* " + attendee + "\n");
-    })
+    });
     response.close();
     page.close();
   });

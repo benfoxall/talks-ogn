@@ -1,5 +1,7 @@
+var PORT = require('system').env.PORT || 8080;
+
 var server = require('webserver').create();
-server.listen(8080, function(request, response) {
+server.listen(PORT, function(request, response) {
   var page = new WebPage();
   page.viewportSize = { width: 900 , height: 1700 };
   page.clipRect = { top: 0, left: 0, width: 900, height: 600 };

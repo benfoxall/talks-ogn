@@ -1,0 +1,10 @@
+css
+fonts
+img
+js
+lib
+plugin
+*.html
+LICENCE
+package.json
+README.md
