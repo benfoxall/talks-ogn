@@ -92,9 +92,9 @@
 			z-index: 10
 		}
 		#link-graph .link {
-			stroke: #999;
-			stroke-opacity: .9;
-			z-index: 5;
+			/*stroke: #999;*/
+			/*stroke-opacity: .9;*/
+			/*z-index: 5;*/
 		}
 
 		.reveal .append-area img{
@@ -406,6 +406,11 @@ var fragmentReverts = {
 
 				var color = d3.scale.category20();
 
+
+	var color = d3.scale.linear()
+    .domain([0, 1])
+    .range(["#ddd", "red"]);
+
 				var force = d3.layout.force()
 					.charge(-120)
 					.linkDistance(100)
@@ -444,6 +449,7 @@ loadURL('http://benjaminbenben.com/2013/07/28/phantomjs-webserver/');
 
 function loadURL(url){
 
+	//http://ogn32-link-areas.herokuapp.com
 	$.getJSON('http://localhost:8080/',{url:url}).then(function(links){
 		var index = graph.nodes.push({name:"root"}) - 1;
 
@@ -477,7 +483,7 @@ function loadURL(url){
 		link
 			.enter().append("line")
 			.attr("class", "link")
-			.style("opacity", function(d) { return d.value});
+			.style("stroke", function(d){return color(d.value)});
 
 		link
 			.exit().remove();
