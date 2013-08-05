@@ -304,7 +304,15 @@ $.getJSON('http://…').then(function(data){
 
 					<section>
 						<div id="link-graph"></div>
-						<div><span class="fragment" data-graph-fragment="graph-1">1<span><span class="fragment">2<span><span class="fragment">3<span></div>
+
+						<div class="fragment" data-graph-url="http://oxford.geeknights.net"></div>
+						<div class="fragment" data-graph-url="http://benjaminbenben.com/2013/07/28/phantomjs-webserver"></div>
+						<div class="fragment" data-graph-url="http://phantomjs.org"></div>
+						<div class="fragment" data-graph-url="http://benjaminbenben.com/hot-pink.html"></div>
+						<div class="fragment" data-graph-url="http://www.wikipedia.org"></div>
+						<div class="fragment" data-graph-url="http://en.wikipedia.org/wiki/Main_Page"></div>
+						<div class="fragment" data-graph-url="http://benjaminbenben.com/ogn-links.html"></div>
+
 					</section>
 				</section>
 
@@ -362,12 +370,30 @@ Reveal.addEventListener( 'fragmentshown', function( event ) {
     if(action){
     	fragmentActions[action] && fragmentActions[action]();
     }
+
+    var graphURL = $(event.fragment).data('graph-url');
+    if(graphURL) loadURL(graphURL)
+    
+
 } );
 Reveal.addEventListener( 'fragmenthidden', function( event ) {
     var action = $(event.fragment).data('fragment-action');
     if(action){
     	fragmentReverts[action] && fragmentReverts[action]();
     }
+
+
+    var graphURL = $(event.fragment).data('graph-url');
+    if(graphURL){
+    	//unload the graph
+			graph = {
+				"nodes":[],
+				"links":[]
+			}
+
+			link.remove();
+			node.remove();
+	}
 } );
 
 
@@ -444,14 +470,23 @@ var fragmentReverts = {
 							.attr("cy", function(d) { return d.y; });
 					});
 
-loadURL('http://benjaminbenben.com/2013/07/28/phantomjs-webserver/');
-// loadURL('http://benjaminbenben.com/2013/07/01/shaker/');
+// returns the index of an existing, or created node
+function nodeOrNew(name){
+	var matches = graph.nodes.filter(function(node){return name == node.name})
+
+	if(matches[0]){
+		matches[0].score++;
+		return graph.nodes.indexOf(matches[0]);
+	} else {
+		return graph.nodes.push({name:name, score:1}) - 1;
+	}
+}
 
 function loadURL(url){
 
-	//http://ogn32-link-areas.herokuapp.com
-	$.getJSON('http://localhost:8080/',{url:url}).then(function(links){
-		var index = graph.nodes.push({name:"root"}) - 1;
+	$.getJSON('http://ogn32-link-areas.herokuapp.com',{url:url}).then(function(links){
+		var index = nodeOrNew(url);
+		console.log()
 
 		var min = Infinity,max = -Infinity;
 		for(var prop in links){
@@ -462,11 +497,9 @@ function loadURL(url){
 		}
 
 		for(var prop in links){
-			if(links.hasOwnProperty(prop)){
+			if(links.hasOwnProperty(prop) && prop !== url){
 				var v = (links[prop] - min)/(max-min);
-				console.log(v);
-
-				var i2 = graph.nodes.push({name:prop, score: v}) - 1;
+				var i2 = nodeOrNew(prop);
 				graph.links.push({"source":index,"target":i2,"value":v})
 			}
 		}
@@ -493,10 +526,14 @@ function loadURL(url){
 			.data(graph.nodes, function(n){return n.name});
 
 		node
-		    .enter().append("circle")
+		  .enter().append("circle")
 			.attr("class", "node")
-			.attr("r", function(d){return ((d.score||0)*5)+8})
+			.attr("r",8)
 			.call(force.drag);
+
+		node
+			.transition()
+			.attr("r", function(d){return d.score*8})
 
 		node
 			.exit().remove();
