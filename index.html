@@ -530,16 +530,16 @@ Reveal.addEventListener( 'fragmenthidden', function( event ) {
 
 
 var fragmentActions = {
-	"ogn-attendees": function(){
-		$.get('http://ogn32-attendees.herokuapp.com/').then(function(response){
-			$('#ogn-attendees').text(response);
-		});
-	},
-	"ogn-image": function(){
-		$.get('http://ogn32-sitepic.herokuapp.com/').then(function(response){
-			$('#ogn-image').html($('<img>',{src:response}));
-		});
-	},
+	// "ogn-attendees": function(){
+	// 	$.get('http://ogn32-attendees.herokuapp.com/').then(function(response){
+	// 		$('#ogn-attendees').text(response);
+	// 	});
+	// },
+	// "ogn-image": function(){
+	// 	$.get('http://ogn32-sitepic.herokuapp.com/').then(function(response){
+	// 		$('#ogn-image').html($('<img>',{src:response}));
+	// 	});
+	// },
 
 	"highlight-webserver":function(){
 		highlighter.classList.add('highlight-webserver');
@@ -553,12 +553,12 @@ var fragmentActions = {
 }
 
 var fragmentReverts = {
-	"ogn-attendees": function(){
-		$('#ogn-attendees').html('<span class="selector">#ogn-attendees</span>');
-	},
-	"ogn-image": function(){
-		$('#ogn-image').html('<span class="selector">#ogn-image</span>');
-	},
+	// "ogn-attendees": function(){
+	// 	$('#ogn-attendees').html('<span class="selector">#ogn-attendees</span>');
+	// },
+	// "ogn-image": function(){
+	// 	$('#ogn-image').html('<span class="selector">#ogn-image</span>');
+	// },
 
 	"highlight-webserver":function(){
 		highlighter.classList.remove('highlight-webserver');
@@ -634,9 +634,22 @@ function nodeOrNew(name){
 	}
 }
 
-function loadURL(url){
 
-	$.getJSON('http://ogn32-link-areas.herokuapp.com',{url:url}).then(function(links){
+$.getJSONorWhatever = function(url, params){
+	if(params && cache[params.url]){
+		console.log("HIT")
+		return $.when(cache[params.url])
+	} else {
+		return $.getJSON.apply(this, arguments);
+	}	
+}
+
+function loadURL(url){
+	console.log(url)
+
+	$.getJSONorWhatever('http://ogn32-link-areas.herokuapp.com',{url:url}).then(function(links){
+		cache[url] = links;
+
 		var index = nodeOrNew(url);
 		console.log()
 
@@ -692,6 +705,10 @@ function loadURL(url){
 	});
 
 }
+
+
+
+var cache = {"http://oxford.geeknights.net":{"http://benjaminbenben.com/":7761,"http://bit.ly/Pesy75":12408,"http://lanyrd.com/cqfdw":18170,"http://mynameismartin.com/":5073,"http://oxford.geeknights.net/":84000,"http://oxford.geeknights.net/ogn29":52052,"http://oxford.geeknights.net/ogn30":52052,"http://oxford.geeknights.net/ogn31":52052,"http://oxford.geeknights.net/volunteer.html":29520,"http://torchbox.com/":2660,"http://twitter.com/oxfordgeeks":23541,"http://www.marianamota.com/":6232,"http://www.torchbox.com/":3360,"https://github.com/LuRsT":4940},"http://benjaminbenben.com/2013/07/28/phantomjs-webserver":{"http://benjaminbenben.com/":4956,"http://benjaminbenben.com/2013/07/28/phantomjs-webserver/":50220,"http://css.benjaminbenben.com/":680,"http://lanyrd.com/2013/ogn32/":1836,"http://lanyrd.com/places/oxfordshire/":1360,"http://localhost:8080/":1751,"http://oxford.geeknights.net/":2584,"http://phantomjs-webserver-example.herokuapp.com/":23175,"http://phantomjs.org/":2800,"http://quiet-lowlands-5118.herokuapp.com/":20929,"https://github.com/ariya/phantomjs/wiki":1751,"https://github.com/ariya/phantomjs/wiki/API-Reference-FileSystem":2261,"https://github.com/ariya/phantomjs/wiki/API-Reference-WebPage#renderbase64format":13098,"https://github.com/ariya/phantomjs/wiki/API-Reference-WebPage#wiki-webpage-render":1700,"https://github.com/ariya/phantomjs/wiki/API-Reference-WebServer":2176,"https://github.com/ariya/phantomjs/wiki/Quick-Start":1955,"https://github.com/benfoxall/phantomjs-oxfordshire-events":4788,"https://github.com/benfoxall/phantomjs-webserver-example":7576,"https://github.com/benfoxall/phantomjs-webserver-example/blob/master/index.html#L52":11840,"https://github.com/benfoxall/phantomjs-webserver-example/blob/master/server.js#L61-L67":3825,"https://github.com/benfoxall/wtcss/blob/master/app.js#L59-L61":833,"https://github.com/stomita/heroku-buildpack-phantomjs":2465,"https://groups.google.com/forum/#!searchin/phantomjs/blank/phantomjs/7XIaNEELuuo/b2jH1B_DJP0J":1479,"https://twitter.com/intent/user?screen_name=benjaminbenben":660},"http://phantomjs.org":{"http://codemirror.net/":1900,"http://emberjs.com/":1520,"http://lesscss.org/":1330,"http://modernizr.com/":1710,"http://phantomjs.org/download.html":12208,"http://phantomjs.org/faq.html":684,"http://phantomjs.org/release-1.9.html":8928,"http://svay.com/":1548,"http://twitter.com/AriyaHidayat":1512,"http://twitter.github.com/bootstrap/":1710,"http://www.phantomjs.org/":24000,"http://yuilibrary.com/projects/yui3/":760,"https://github.com/ariya/phantomjs":2394,"https://github.com/ariya/phantomjs/issues":5472,"https://github.com/ariya/phantomjs/wiki":2983,"https://github.com/ariya/phantomjs/wiki/API-Reference":570,"https://github.com/ariya/phantomjs/wiki/Examples":1767,"https://github.com/ariya/phantomjs/wiki/Headless-Testing":1332,"https://github.com/ariya/phantomjs/wiki/Network-Monitoring":1332,"https://github.com/ariya/phantomjs/wiki/Page-Automation":1332,"https://github.com/ariya/phantomjs/wiki/Quick-Start":6426,"https://github.com/ariya/phantomjs/wiki/Screen-Capture":1332,"https://github.com/ariya/phantomjs/wiki/Users":1710,"https://groups.google.com/forum/#!forum/phantomjs":7668},"http://foxallstudio.com":{"http://www.foxallstudio.com/":24400,"http://www.foxallstudio.com/#":2400,"http://www.foxallstudio.com/background/":10800,"http://www.foxallstudio.com/contact/":10800},"http://www.wikipedia.org":{"http://ab.wikipedia.org/":336,"http://ace.wikipedia.org/":600,"http://af.wikipedia.org/":468,"http://ak.wikipedia.org/":252,"http://als.wikipedia.org/":636,"http://am.wikipedia.org/":144,"http://an.wikipedia.org/":468,"http://ang.wikipedia.org/":612,"http://ar.wikipedia.org/":312,"http://arc.wikipedia.org/":648,"http://arz.wikipedia.org/":300,"http://as.wikipedia.org/":864,"http://ast.wikipedia.org/":468,"http://av.wikipedia.org/":252,"http://ay.wikipedia.org/":324,"http://az.wikipedia.org/":8850,"http://ba.wikipedia.org/":564,"http://bar.wikipedia.org/":432,"http://bat-smg.wikipedia.org/":588,"http://bcl.wikipedia.org/":636,"http://be-x-old.wikipedia.org/":648,"http://be.wikipedia.org/":648,"http://bg.wikipedia.org/":564,"http://bh.wikipedia.org/":756,"http://bi.wikipedia.org/":396,"http://bjn.wikipedia.org/":8750,"http://bm.wikipedia.org/":648,"http://bn.wikipedia.org/":540,"http://bo.wikipedia.org/":756,"http://bpy.wikipedia.org/":2196,"http://br.wikipedia.org/":528,"http://bs.wikipedia.org/":456,"http://bug.wikipedia.org/":780,"http://bxr.wikipedia.org/":372,"http://ca.wikipedia.org/":324,"http://cbk-zam.wikipedia.org/":8650,"http://cdo.wikipedia.org/":756,"http://ce.wikipedia.org/":432,"http://ceb.wikipedia.org/":636,"http://ch.wikipedia.org/":456,"http://chr.wikipedia.org/":108,"http://chy.wikipedia.org/":1080,"http://ckb.wikipedia.org/":720,"http://co.wikipedia.org/":300,"http://commons.wikimedia.org/":1683,"http://cr.wikipedia.org/":8900,"http://crh.wikipedia.org/":636,"http://cs.wikipedia.org/":324,"http://csb.wikipedia.org/":576,"http://cu.wikipedia.org/":1140,"http://cv.wikipedia.org/":444,"http://cy.wikipedia.org/":456,"http://da.wikipedia.org/":324,"http://de.wikipedia.org/":8100,"http://de.wikipedia.org/wiki/Wikipedia:Sprachen":960,"http://diq.wikipedia.org/":336,"http://dsb.wikipedia.org/":648,"http://dv.wikipedia.org/":324,"http://dz.wikipedia.org/":648,"http://ee.wikipedia.org/":384,"http://el.wikipedia.org/":480,"http://eml.wikipedia.org/":984,"http://en.wikipedia.org/":8040,"http://eo.wikipedia.org/":504,"http://eo.wikipedia.org/wiki/Vikipedio:Internacia_Vikipedio":672,"http://es.wikipedia.org/":8076,"http://et.wikipedia.org/":252,"http://eu.wikipedia.org/":408,"http://ext.wikipedia.org/":540,"http://fa.wikipedia.org/":324,"http://ff.wikipedia.org/":396,"http://fi.wikipedia.org/":312,"http://fiu-vro.wikipedia.org/":228,"http://fj.wikipedia.org/":864,"http://fo.wikipedia.org/":456,"http://fr.wikipedia.org/":8112,"http://frp.wikipedia.org/":348,"http://frr.wikipedia.org/":480,"http://fur.wikipedia.org/":312,"http://fy.wikipedia.org/":288,"http://ga.wikipedia.org/":372,"http://gag.wikipedia.org/":384,"http://gan.wikipedia.org/":72,"http://gd.wikipedia.org/":396,"http://gl.wikipedia.org/":348,"http://glk.wikipedia.org/":276,"http://gn.wikipedia.org/":408,"http://got.wikipedia.org/":216,"http://gu.wikipedia.org/":756,"http://gv.wikipedia.org/":288,"http://ha.wikipedia.org/":684,"http://hak.wikipedia.org/":708,"http://haw.wikipedia.org/":696,"http://he.wikipedia.org/":300,"http://hi.wikipedia.org/":648,"http://hif.wikipedia.org/":432,"http://hr.wikipedia.org/":420,"http://hsb.wikipedia.org/":720,"http://ht.wikipedia.org/":744,"http://hu.wikipedia.org/":372,"http://hy.wikipedia.org/":516,"http://ia.wikipedia.org/":516,"http://id.wikipedia.org/":888,"http://ie.wikipedia.org/":516,"http://ig.wikipedia.org/":216,"http://ik.wikipedia.org/":360,"http://ilo.wikipedia.org/":360,"http://io.wikipedia.org/":156,"http://is.wikipedia.org/":420,"http://it.wikipedia.org/":8040,"http://iu.wikipedia.org/":948,"http://ja.wikipedia.org/":7788,"http://ja.wikipedia.org/wiki/Wikipedia:%E5%A4%9A%E8%A8%80%E8%AA%9E%E3%83%97…A6%E3%81%AE%E3%82%A6%E3%82%A3%E3%82%AD%E3%83%9A%E3%83%87%E3%82%A3%E3%82%A2":9500,"http://jbo.wikipedia.org/":288,"http://jv.wikipedia.org/":552,"http://ka.wikipedia.org/":528,"http://kaa.wikipedia.org/":744,"http://kab.wikipedia.org/":456,"http://kbd.wikipedia.org/":492,"http://kg.wikipedia.org/":312,"http://ki.wikipedia.org/":360,"http://kk.wikipedia.org/":9550,"http://kl.wikipedia.org/":504,"http://km.wikipedia.org/":972,"http://kn.wikipedia.org/":540,"http://ko.wikipedia.org/":108,"http://koi.wikipedia.org/":624,"http://krc.wikipedia.org/":1056,"http://ks.wikipedia.org/":1248,"http://ksh.wikipedia.org/":528,"http://ku.wikipedia.org/":660,"http://kv.wikipedia.org/":264,"http://kw.wikipedia.org/":1068,"http://ky.wikipedia.org/":504,"http://la.wikipedia.org/":300,"http://lad.wikipedia.org/":1020,"http://lb.wikipedia.org/":792,"http://lbe.wikipedia.org/":312,"http://lez.wikipedia.org/":300,"http://lg.wikipedia.org/":420,"http://li.wikipedia.org/":456,"http://lij.wikipedia.org/":312,"http://lmo.wikipedia.org/":468,"http://ln.wikipedia.org/":348,"http://lo.wikipedia.org/":480,"http://lt.wikipedia.org/":384,"http://ltg.wikipedia.org/":360,"http://lv.wikipedia.org/":420,"http://map-bms.wikipedia.org/":936,"http://mdf.wikipedia.org/":468,"http://meta.wikimedia.org/":1615,"http://meta.wikimedia.org/wiki/%EC%9C%84%ED%82%A4%EB%B0%B1%EA%B3%BC%EC%9D%98_%EB%AA%A9%EB%A1%9D":276,"http://meta.wikimedia.org/wiki/List_of_Wikipedias":900,"http://meta.wikimedia.org/wiki/Lista_de_Wikipedias":768,"http://meta.wikimedia.org/wiki/Liste_des_Wikip%C3%A9dias":828,"http://mg.wikipedia.org/":480,"http://mhr.wikipedia.org/":648,"http://mi.wikipedia.org/":276,"http://mk.wikipedia.org/":636,"http://ml.wikipedia.org/":648,"http://mn.wikipedia.org/":384,"http://mo.wikipedia.org/":756,"http://mr.wikipedia.org/":540,"http://mrj.wikipedia.org/":660,"http://ms.wikipedia.org/":768,"http://mt.wikipedia.org/":240,"http://mwl.wikipedia.org/":456,"http://my.wikipedia.org/":936,"http://myv.wikipedia.org/":384,"http://mzn.wikipedia.org/":936,"http://na.wikipedia.org/":732,"http://nah.wikipedia.org/":384,"http://nap.wikipedia.org/":588,"http://nds-nl.wikipedia.org/":744,"http://nds.wikipedia.org/":624,"http://ne.wikipedia.org/":648,"http://new.wikipedia.org/":1008,"http://nl.wikipedia.org/":564,"http://nn.wikipedia.org/":396,"http://no.wikipedia.org/":360,"http://nov.wikipedia.org/":312,"http://nrm.wikipedia.org/":1200,"http://nso.wikipedia.org/":900,"http://nv.wikipedia.org/":600,"http://ny.wikipedia.org/":552,"http://oc.wikipedia.org/":384,"http://om.wikipedia.org/":720,"http://or.wikipedia.org/":648,"http://os.wikipedia.org/":384,"http://pa.wikipedia.org/":1068,"http://pag.wikipedia.org/":576,"http://pam.wikipedia.org/":708,"http://pap.wikipedia.org/":588,"http://pcd.wikipedia.org/":312,"http://pdc.wikipedia.org/":384,"http://pfl.wikipedia.org/":456,"http://pi.wikipedia.org/":432,"http://pih.wikipedia.org/":792,"http://pl.wikipedia.org/":7980,"http://pl.wikipedia.org/wiki/Wikipedia:Lista_wersji_j%C4%99zykowych":1320,"http://pms.wikipedia.org/":552,"http://pnb.wikipedia.org/":852,"http://pnt.wikipedia.org/":504,"http://ps.wikipedia.org/":192,"http://pt.wikipedia.org/":8184,"http://qu.wikipedia.org/":516,"http://rm.wikipedia.org/":576,"http://rmy.wikipedia.org/":1140,"http://rn.wikipedia.org/":336,"http://ro.wikipedia.org/":420,"http://roa-rup.wikipedia.org/":684,"http://roa-tara.wikipedia.org/":504,"http://ru.wikipedia.org/":8112,"http://ru.wikipedia.org/wiki/%D0%92%D0%B8%D0%BA%D0%B8%D0%BF%D0%B5%D0%B4%D0%B8%D1%8F:%D0%A1%D0%92":780,"http://rue.wikipedia.org/":924,"http://rw.wikipedia.org/":636,"http://sa.wikipedia.org/":972,"http://sah.wikipedia.org/":1176,"http://sc.wikipedia.org/":288,"http://scn.wikipedia.org/":408,"http://sco.wikipedia.org/":288,"http://sd.wikipedia.org/":924,"http://se.wikipedia.org/":540,"http://sg.wikipedia.org/":312,"http://sh.wikipedia.org/":1704,"http://si.wikipedia.org/":540,"http://simple.wikipedia.org/":732,"http://sk.wikipedia.org/":540,"http://sl.wikipedia.org/":600,"http://sm.wikipedia.org/":768,"http://sn.wikipedia.org/":480,"http://so.wikipedia.org/":576,"http://species.wikimedia.org/":1853,"http://sq.wikipedia.org/":276,"http://sr.wikipedia.org/":804,"http://srn.wikipedia.org/":624,"http://ss.wikipedia.org/":372,"http://st.wikipedia.org/":408,"http://stq.wikipedia.org/":468,"http://su.wikipedia.org/":600,"http://sv.wikipedia.org/":432,"http://sw.wikipedia.org/":432,"http://szl.wikipedia.org/":360,"http://ta.wikipedia.org/":540,"http://te.wikipedia.org/":648,"http://tet.wikipedia.org/":288,"http://tg.wikipedia.org/":372,"http://th.wikipedia.org/":324,"http://ti.wikipedia.org/":144,"http://tk.wikipedia.org/":840,"http://tl.wikipedia.org/":396,"http://tn.wikipedia.org/":492,"http://to.wikipedia.org/":9375,"http://tpi.wikipedia.org/":468,"http://tr.wikipedia.org/":348,"http://ts.wikipedia.org/":432,"http://tt.wikipedia.org/":912,"http://tum.wikipedia.org/":612,"http://tw.wikipedia.org/":180,"http://ty.wikipedia.org/":576,"http://udm.wikipedia.org/":372,"http://ug.wikipedia.org/":888,"http://uk.wikipedia.org/":588,"http://ur.wikipedia.org/":180,"http://uz.wikipedia.org/":540,"http://ve.wikipedia.org/":528,"http://vec.wikipedia.org/":348,"http://vep.wikipedia.org/":372,"http://vi.wikipedia.org/":528,"http://vi.wikipedia.org/wiki/Wikipedia:Phi%C3%AAn_b%E1%BA%A3n_ng%C3%B4n_ng%E1%BB%AF":840,"http://vls.wikipedia.org/":612,"http://vo.wikipedia.org/":396,"http://wa.wikipedia.org/":312,"http://war.wikipedia.org/":408,"http://wikimediafoundation.org/":1496,"http://wikimediafoundation.org/wiki/Privacy_policy":1428,"http://wikimediafoundation.org/wiki/Terms_of_Use":1343,"http://wo.wikipedia.org/":288,"http://wuu.wikipedia.org/":72,"http://www.mediawiki.org/":1683,"http://www.wikibooks.org/":1700,"http://www.wikidata.org/":1700,"http://www.wikinews.org/":1598,"http://www.wikiquote.org/":1649,"http://www.wikisource.org/":1768,"http://www.wikiversity.org/":1751,"http://www.wikivoyage.org/":1802,"http://www.wiktionary.org/":1717,"http://xal.wikipedia.org/":372,"http://xh.wikipedia.org/":420,"http://xmf.wikipedia.org/":648,"http://yi.wikipedia.org/":252,"http://yo.wikipedia.org/":348,"http://za.wikipedia.org/":384,"http://zea.wikipedia.org/":396,"http://zh-classical.wikipedia.org/":72,"http://zh-min-nan.wikipedia.org/":564,"http://zh-yue.wikipedia.org/":72,"http://zh.wikipedia.org/":7752,"http://zh.wikipedia.org/wiki/Wikipedia:%E7%BB%B4%E5%9F%BA%E7%99%BE%E7%A7%91%E8%AF%AD%E8%A8%80%E5%88%97%E8%A1%A8":240,"http://zu.wikipedia.org/":324}};
 
 		</script>
 
