@@ -19,6 +19,7 @@
 
 		<!-- For syntax highlighting -->
 		<link rel="stylesheet" href="lib/css/zenburn.css">
+		<!-- <link rel="stylesheet" href="lib/css/googlecode.css"> -->
 
 		<!-- If the query includes 'print-pdf', use the PDF print sheet -->
 		<script>
@@ -103,6 +104,35 @@
 			border:none;
 			margin:0;
 		}
+
+		.image-fragments{
+			width:1000px;
+			height:650px;
+			position: relative;;
+		}
+		.reveal section .image-fragments img{
+			position: absolute;
+			left:0;
+		}
+		.reveal section .image-fragments img.faded.visible{
+			opacity: 0.3
+		}
+		.webserver,.phantomjs, .page-context{
+	background-color:#3F3F3F;
+	-webkit-transition: all .5s ease;
+	   -moz-transition: all .5s ease;
+	    -ms-transition: all .5s ease;
+	     -o-transition: all .5s ease;
+	        transition: all .5s ease;
+}
+
+.highlight-webserver .webserver{background-color:#f08; color:#fff; }
+.highlight-webserver .webserver *{color:#fff;}
+.highlight-phantomjs .phantomjs{background-color:#08f; color:#fff; }
+.highlight-phantomjs .phantomjs *{color:#fff;}
+.highlight-page-context .page-context{background-color:#ffb600; color:#fff; }
+.highlight-page-context .page-context *{color:#fff;}
+
 		</style>
 	</head>
 
@@ -117,8 +147,120 @@
 					<h1>serving websites<br/>to websites</h1>
 					<h2>with PhantomJS</h2>
 				</section>
+				<!-- <section> -->
+					<section>
+						<div class="image-fragments">
+							<img src="img/fragments-1.png" class="borderless fragment faded" data-fragment-index="2" />
+							<img src="img/fragments-2.png" class="borderless"/>
+							<img src="img/fragments-3.png" class="borderless fragment" data-fragment-index="3" />
+						</div>
+					</section>
+				<!-- </section> -->
 
-				<section>
+					<section data-background="#3F3F3F" data-background-transition="slide">
+						<pre style="box-shadow:none"><code data-trim data-noescape id="highlighter"  style="overflow:visible"  class="javascript">
+<span class="webserver">var server = require('webserver').create();
+server.listen(8080, function(request, response) {</span>
+<span class="phantomjs">  var page = new WebPage();
+  page.open('https://m.lanyrd.com/2013/ogn32/attendees/', function (status) {
+    var attendees = page.evaluate(</span><span class="page-context">function(){
+      return $('a[href^="/profile"] .title').map(function(){
+        var name = $(this).text().trim(),
+          bio  = $(this).next().text().trim();
+        return name + ' - ' + bio;
+      });
+    }</span><span class="phantomjs">);</span><span class="webserver">
+    response.statusCode = 200;
+    response.write('* ' + attendees.join('\n* '));
+    response.close();</span><span class="phantomjs">
+    page.close();</span><span class="webserver">
+  });
+});</span>
+						</code></pre>
+						<div class="fragment" data-fragment-action="highlight-webserver"></div>
+						<div class="fragment" data-fragment-action="highlight-phantomjs"></div>
+						<div class="fragment" data-fragment-action="highlight-page-context"></div>
+					</section>
+
+					<section>
+						<p><img src="img/output-html.png" class="borderless"></p>
+					</section>
+
+
+					<section>
+						<p><img src="img/link-areas.png" class="borderless"></p>
+					</section>
+
+					<section data-background="#3F3F3F" data-background-transition="slide">
+						<pre style="box-shadow:none"><code data-trim data-noescape style="overflow:visible" class="javascript">
+
+var links = page.evaluate(function () {
+  return [].reduce.call(document.querySelectorAll('a'), function(memo, a){
+    var bb = a.getBoundingClientRect(),
+      area = bb.width * bb.height,
+      href = a.href
+
+    if(area)
+      memo[href] = (memo[href] || 0) + area;
+   
+    return memo;
+  },{});
+});
+
+<span class="fragment">/*
+{ http://www.torchbox.com/: 3360, 
+  http://oxford.geeknights.net/: 89872, 
+  http://bit.ly/Pesy75: 6460, 
+  http://www.marianamota.com/: 4686, 
+  http://benjaminbenben.com/: 4017…} 
+*/</span>
+						</code></pre>
+					</section>
+					<section data-background="#3F3F3F" data-background-transition="slide">
+						<pre style="box-shadow:none"><code data-trim data-noescape style="overflow:visible" class="javascript">
+
+var url = 'http://benjaminbenben.com';
+
+$.getJSON('http://ogn32-link-areas.herokuapp.com',{url:url})
+.then(function(links){
+	// DRAW GRAPHS!!!11!one!1!
+})
+
+						</code></pre>
+					</section>
+
+
+					<section>
+						<div id="link-graph"></div>
+
+						<div class="fragment" data-graph-url="http://oxford.geeknights.net"></div>
+						<!-- <div class="fragment" data-graph-url="http://benjaminbenben.com"></div> -->
+						<div class="fragment" data-graph-url="http://benjaminbenben.com/2013/07/28/phantomjs-webserver"></div>
+						<div class="fragment" data-graph-url="http://phantomjs.org"></div>
+						<div class="fragment" data-graph-url="http://foxallstudio.com"></div>
+						<!-- <div class="fragment" data-graph-url="http://benjaminbenben.com/hot-pink.html"></div> -->
+						<div class="fragment" data-graph-url="http://www.wikipedia.org"></div>
+						<!-- <div class="fragment" data-graph-url="http://en.wikipedia.org/wiki/Main_Page"></div> -->
+						<!-- <div class="fragment" data-graph-url="http://benjaminbenben.com/ogn-links.html"></div> -->
+
+					</section>
+
+
+					<section>
+						<p>mediaqueri.es</p>
+						<p><a href="http://mediaqueri.es" class="image">
+							<img src="img/mediaqueri.es.png" class="borderless">
+						</a></p>
+					</section>
+
+					<section>
+						<p>wtcss</p>
+						<p><a href="http://css.benjaminbenben.com" class="image">
+							<img src="img/wtcss.png" class="borderless">
+						</a></p>
+					</section>
+
+				<!--section>
 					<section id="phantomjs">
 						<a href="http://phantomjs.org" class="image">
 							<img src="img/phantomjs.png" class="borderless">
@@ -149,9 +291,9 @@ yeah, totally!
 							<img src="img/mediaqueri.es.png" class="borderless">
 						</a></p>
 					</section>
-				</section>
+				</section-->
 
-
+<!-- 
 				<section>
 					<section id="webserver">
 						<p><a href="https://github.com/ariya/phantomjs/wiki/API-Reference-WebServer" class="image">
@@ -290,8 +432,8 @@ $.getJSON('http://…').then(function(data){
   console.log("links - ", data.links);
 })
 						</code></pre>
-					</section>
-
+					</section> -->
+<!-- 
 					<section>
 						<div id="link-graph"></div>
 
@@ -303,7 +445,7 @@ $.getJSON('http://…').then(function(data){
 						<div class="fragment" data-graph-url="http://en.wikipedia.org/wiki/Main_Page"></div>
 						<div class="fragment" data-graph-url="http://benjaminbenben.com/ogn-links.html"></div>
 
-					</section>
+					</section> -->
 				</section>
 
 				<section>
@@ -320,7 +462,7 @@ $.getJSON('http://…').then(function(data){
 		</div>
 
 		<script src="lib/js/head.min.js"></script>
-		<script src="js/reveal.min.js"></script>
+		<script src="js/reveal.js"></script>
 
 		<script>
 
@@ -333,7 +475,7 @@ $.getJSON('http://…').then(function(data){
 				center: true,
 
 				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
-				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+				transition: Reveal.getQueryHash().transition || 'linear', // default/cube/page/concave/zoom/linear/fade/none
 
 				// Optional libraries used to extend on reveal.js
 				dependencies: [
@@ -397,6 +539,16 @@ var fragmentActions = {
 		$.get('http://ogn32-sitepic.herokuapp.com/').then(function(response){
 			$('#ogn-image').html($('<img>',{src:response}));
 		});
+	},
+
+	"highlight-webserver":function(){
+		highlighter.classList.add('highlight-webserver');
+	},
+	"highlight-phantomjs":function(){
+		highlighter.classList.add('highlight-phantomjs');
+	},
+	"highlight-page-context":function(){
+		highlighter.classList.add('highlight-page-context');
 	}
 }
 
@@ -406,6 +558,16 @@ var fragmentReverts = {
 	},
 	"ogn-image": function(){
 		$('#ogn-image').html('<span class="selector">#ogn-image</span>');
+	},
+
+	"highlight-webserver":function(){
+		highlighter.classList.remove('highlight-webserver');
+	},
+	"highlight-phantomjs":function(){
+		highlighter.classList.remove('highlight-phantomjs');
+	},
+	"highlight-page-context":function(){
+		highlighter.classList.remove('highlight-page-context');
 	}
 }
 
